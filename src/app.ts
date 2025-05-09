@@ -10,7 +10,7 @@ const io = new Server(server);
 
 
 app.get('/', (req: Request, res: Response): void => {
-    res.send('Hello');
+    res.send('Hellos');
 });
 
 io.on('connection', (socket: Socket): void => {
