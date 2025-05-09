@@ -16,7 +16,7 @@ app.get('/', (req: Request, res: Response): void => {
 io.on('connection', (socket: Socket): void => {
     console.log('a user connected');
 });
-const PORT = process.env.PORT || 3009;
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
