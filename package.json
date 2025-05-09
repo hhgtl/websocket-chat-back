@@ -6,7 +6,7 @@
   "scripts": {
     "start-dev": "nodemon --inspect dist/app.js",
     "watch-dev": "tsc -w",
-    "build": "tsc",
+    "build": "yarn install && tsc",
     "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
