@@ -2,12 +2,9 @@ import express, { Request, Response } from 'express';
 import { createServer } from 'node:http';
 import { Server, Socket } from 'socket.io';
 
-
-
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-
 
 app.get('/', (req: Request, res: Response): void => {
     res.send('Hellos');
