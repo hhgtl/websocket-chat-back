@@ -7,7 +7,7 @@
     "start-dev": "nodemon --inspect dist/app.js",
     "watch-dev": "tsc -w",
     "build": "tsc",
-    "start": "node dist/app.ts",
+    "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -20,5 +20,8 @@
     "nodemon": "^3.1.10",
     "socket.io": "^4.8.1",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }
