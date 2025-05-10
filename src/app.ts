@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { createServer } from 'node:http';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import cors from 'cors';
 
 const app = express();
@@ -19,13 +19,31 @@ const io = new Server(server, {
     },
 });
 
-app.get('/', (req: Request, res: Response): void => {
+app.get('/', (req: Request, res: Response) => {
     res.send('Hello');
 });
 
-io.on('connection', (socket: Socket): void => {
+const messages = [{
+    message: 'Hello Dimych',
+    id: 'qwerfsd1421',
+    user: {id: 'q412fds', name: "Valera"}
+}, {
+    message: 'Hi Valera',
+    id: 'qwe523gsdgsd',
+    user: {id: '532sdgd', name: "Dimych"}
+}]
+
+
+
+io.on('connection', (socketChannel) => {
     console.log('a user connected');
+    socketChannel.on('client-message-sent', (message: string) => {
+        console.log(message);
+    });
+
+    socketChannel.emit('init-messages-published', messages)
 });
+
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
