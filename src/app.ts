@@ -3,15 +3,16 @@ import {createServer} from 'node:http';
 import {Server} from 'socket.io';
 import cors from 'cors';
 
-const messagesMoke = [{
-    message: 'Hello Dimych',
-    id: 'qwerfsd1421',
-    user: {id: 'q412fds', name: "Valera"}
-}, {
-    message: 'Hi Valera',
-    id: 'qwe523gsdgsd',
-    user: {id: '532sdgd', name: "Dimych"}
-}]
+type User = {
+    name: string,
+    id: string
+}
+
+type Message = {
+    message: string;
+    id: string;
+    user: User
+}
 
 
 const app = express();
@@ -34,26 +35,41 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello');
 });
 
-let messages = [...messagesMoke]
+let messages: Message[] = []
+
+const usersState = new Map()
 
 
 io.on('connection', (socketChannel) => {
-    console.log('a user connected');
-    socketChannel.on('client-message-sent', (message: string) => {
-        let messageItem = {message, id: "3r2lfsa" + new Date().getTime(), user: {id: 'r23fwe', name: 'Valera'}};
-        messages.push(messageItem);
 
+    usersState.set(socketChannel, {id: new Date().getTime().toString(), name: "anonym"})
+
+    io.on('disconnect', () => {
+        console.log('User disconnected');
+        usersState.delete(socketChannel);
+    })
+
+    socketChannel.on('client-name-sent', (name: string) => {
+       const user = usersState.get(socketChannel)
+        user.name = name
+    })
+
+    socketChannel.on('client-message-sent', (message: string) => {
+        const user = usersState.get(socketChannel)
+
+        let messageItem = {message, id: new Date().getTime().toString(), user: {id: user.id, name: user.name}};
+        messages.push(messageItem);
         io.emit('new-message-sent', messageItem);
-        console.log(message);
     });
 
+
     socketChannel.on('reset-messages-sent', () => {
-        messages = [...messagesMoke]
+        messages = []
         io.emit('init-messages-published', messages);
     })
 
-
     socketChannel.emit('init-messages-published', messages)
+    console.log('a user connected');
 });
 
 
